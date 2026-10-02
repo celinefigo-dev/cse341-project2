@@ -1,0 +1,31 @@
+{
+  "name": "cse341-project2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+  "start": "node server.js",
+  "dev": "node --watch server.js",
+  "swagger": "node swagger.js"
+},
+
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/celinefigo-dev/cse341-project2.git"
+  },
+
+  "keywords": [],
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/celinefigo-dev/cse341-project2/issues"
+  },
+  "homepage": "https://github.com/celinefigo-dev/cse341-project2#readme",
+  "dependencies": {
+    "dotenv": "^18.0.5",
+    "express": "^5.2.1",
+    "express-validator": "^7.3.2",
+    "mongodb": "^7.7.0",
+    "swagger-autogen": "^2.23.7",
+    "swagger-ui-express": "^5.0.1"
+  }
+}
