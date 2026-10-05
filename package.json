@@ -4,16 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-  "start": "node server.js",
-  "dev": "node --watch server.js",
-  "swagger": "node swagger.js"
-},
-
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "swagger": "node swagger.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/celinefigo-dev/cse341-project2.git"
   },
-
   "keywords": [],
   "type": "commonjs",
   "bugs": {
@@ -23,8 +21,11 @@
   "dependencies": {
     "dotenv": "^18.0.5",
     "express": "^5.2.1",
+    "express-session": "^1.19.0",
     "express-validator": "^7.3.2",
     "mongodb": "^7.7.0",
+    "passport": "^0.7.0",
+    "passport-github2": "^0.1.12",
     "swagger-autogen": "^2.23.7",
     "swagger-ui-express": "^5.0.1"
   }

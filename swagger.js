@@ -6,7 +6,7 @@ const doc = {
     description: 'API for managing travel tours and bookings'
   },
   host: 'localhost:3000',
-  schemes: ['http']
+  schemes: ['https']
 };
 
 const outputFile = './swagger.json';
