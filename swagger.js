@@ -5,7 +5,7 @@ const doc = {
     title: 'Travel Tours API',
     description: 'API for managing travel tours and bookings'
   },
-  host: 'localhost:3000',
+  host: 'cse341-project2.onrender.com',
   schemes: ['https']
 };
 
