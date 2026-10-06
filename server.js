@@ -1,29 +1,108 @@
 const express = require('express');
 const dotenv = require('dotenv');
+
+dotenv.config();
+
+const session = require('express-session');
+const passport = require('passport');
+const GitHubStrategy = require('passport-github2').Strategy;
+
 const { initDb } = require('./db/connect');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 
-dotenv.config();
-
 const app = express();
 const port = process.env.PORT || 3000;
 
-
 app.use(express.json());
 
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false
+  })
+);
+
+// Passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+// GitHub OAuth Strategy
+passport.use(
+  new GitHubStrategy(
+    {
+      clientID: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      callbackURL: 'http://localhost:3000/github/callback'
+    },
+    (accessToken, refreshToken, profile, done) => {
+      return done(null, profile);
+    }
+  )
+);
+
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+  done(null, user);
+});
+
+// GitHub login
+app.get(
+  '/login',
+  passport.authenticate('github', {
+    scope: ['user:email']
+  })
+);
+
+// GitHub callback
+app.get(
+  '/github/callback',
+  passport.authenticate('github', {
+    failureRedirect: '/'
+  }),
+  (req, res) => {
+    res.redirect('/');
+  }
+);
+
+// Logout
+app.get('/logout', (req, res, next) => {
+  req.logout((error) => {
+    if (error) {
+      return next(error);
+    }
+
+    res.redirect('/');
+  });
+});
+
+// Home route
+app.get('/', (req, res) => {
+  if (req.isAuthenticated()) {
+    res.send(
+      `Logged in as ${req.user.username}. <a href="/logout">Logout</a>`
+    );
+  } else {
+    res.send(
+      'Travel Tours API is running! <a href="/login">Login with GitHub</a>'
+    );
+  }
+});
+
 // Swagger documentation
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocument)
+);
 
 // Tours and booking routes
 app.use('/tours', require('./routes/tours'));
 app.use('/bookings', require('./routes/bookings'));
-
-// Home route
-app.get('/', (req, res) => {
-  res.send('Travel Tours API is running!');
-});
-
 
 const startServer = async () => {
   try {

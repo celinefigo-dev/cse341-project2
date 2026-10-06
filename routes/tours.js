@@ -2,20 +2,15 @@ const express = require('express');
 const router = express.Router();
 
 const toursController = require('../controllers/tours');
+const { isAuthenticated } = require('../middleware/auth');
 
-// GET all tours
+// Anyone can view tours //
 router.get('/', toursController.getAllTours);
-
-// GET one tour
 router.get('/:id', toursController.getSingleTour);
 
-// CREATE tour
-router.post('/', toursController.createTour);
-
-// UPDATE tour
-router.put('/:id', toursController.updateTour);
-
-// DELETE tour
-router.delete('/:id', toursController.deleteTour);
+// Logged-in users only //
+router.post('/', isAuthenticated, toursController.createTour);
+router.put('/:id', isAuthenticated, toursController.updateTour);
+router.delete('/:id', isAuthenticated, toursController.deleteTour);
 
 module.exports = router;
