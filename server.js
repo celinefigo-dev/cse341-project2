@@ -29,21 +29,16 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // GitHub OAuth Strategy
-passport.use(
-  new GitHubStrategy(
-    {
-      clientID: process.env.GITHUB_CLIENT_ID,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL:
-        process.env.GITHUB_CALLBACK_URL ||
-        'https://cse341-project2-clr4.onrender.com/github/callback'
-    },
-    (accessToken, refreshToken, profile, done) => {
-      return done(null, profile);
-    }
-  )
-);
-
+passport.use(new GitHubStrategy(
+  {
+    clientID: process.env.GITHUB_CLIENT_ID,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    callbackURL: process.env.GITHUB_CALLBACK_URL
+  },
+  (accessToken, refreshToken, profile, done) => {
+    return done(null, profile);
+  }
+));
 passport.serializeUser((user, done) => {
   done(null, user);
 });
@@ -61,13 +56,39 @@ app.get(
 );
 
 // GitHub callback
+// GitHub callback
 app.get(
   '/github/callback',
-  passport.authenticate('github', {
-    failureRedirect: '/'
-  }),
-  (req, res) => {
-    res.redirect('/');
+  (req, res, next) => {
+    passport.authenticate('github', (err, user, info) => {
+      if (err) {
+        console.error('GitHub OAuth error:', err.message);
+
+        // Show only the error code, not secret values
+        if (err.oauthError) {
+          console.error(
+            'OAuth HTTP status:',
+            err.oauthError.statusCode
+          );
+        }
+
+        return res.status(500).send(
+          'GitHub authentication failed. Check Render logs.'
+        );
+      }
+
+      if (!user) {
+        return res.redirect('/');
+      }
+
+      req.logIn(user, (loginError) => {
+        if (loginError) {
+          return next(loginError);
+        }
+
+        return res.redirect('/');
+      });
+    })(req, res, next);
   }
 );
 
