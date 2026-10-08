@@ -34,7 +34,9 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: 'http://localhost:3000/github/callback'
+      callbackURL:
+        process.env.GITHUB_CALLBACK_URL ||
+        'http://localhost:3000/github/callback'
     },
     (accessToken, refreshToken, profile, done) => {
       return done(null, profile);
@@ -101,8 +103,11 @@ app.use(
 );
 
 // Tours and booking routes
-app.use('/tours', require('./routes/tours'));
-app.use('/bookings', require('./routes/bookings'));
+const toursRoutes = require('./routes/tours');
+const bookingsRoutes = require('./routes/bookings');
+
+app.use('/tours', toursRoutes);
+app.use('/bookings', bookingsRoutes);
 
 const startServer = async () => {
   try {

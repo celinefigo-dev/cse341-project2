@@ -13,4 +13,5 @@ router.post('/', isAuthenticated, toursController.createTour);
 router.put('/:id', isAuthenticated, toursController.updateTour);
 router.delete('/:id', isAuthenticated, toursController.deleteTour);
 
+// #swagger.start //
 module.exports = router;

@@ -3,10 +3,10 @@ const swaggerAutogen = require('swagger-autogen')();
 const doc = {
   info: {
     title: 'Travel Tours API',
-    description: 'API for managing travel tours and bookings'
+    description: 'API for managing tours and bookings with GitHub OAuth authentication'
   },
   host: 'localhost:3000',
-  schemes: ['https']
+  schemes: ['http']
 };
 
 const outputFile = './swagger.json';

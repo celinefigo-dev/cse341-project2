@@ -4,10 +4,8 @@ const isAuthenticated = (req, res, next) => {
   }
 
   return res.status(401).json({
-    message: 'You must be logged in to perform this action'
+    message: 'Authentication required. Please log in with GitHub.'
   });
 };
 
-module.exports = {
-  isAuthenticated
-};
+module.exports = { isAuthenticated };
