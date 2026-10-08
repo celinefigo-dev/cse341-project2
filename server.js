@@ -36,7 +36,7 @@ passport.use(
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
       callbackURL:
         process.env.GITHUB_CALLBACK_URL ||
-        'http://localhost:3000/github/callback'
+        'https://cse341-project2-clr4.onrender.com/github/callback'
     },
     (accessToken, refreshToken, profile, done) => {
       return done(null, profile);
